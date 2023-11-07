@@ -11,12 +11,16 @@ int main() {
         if (!server.isConnected()) {
             server.acceptConnection();
         }
-        char message[100] = "";
-        if (server.safeReceiveData(message, 100)) {
-            quit = strcmp(message, "quit") == 0;
+        std::string message;
+        if (server.safeReceiveData(message)) {
+            quit = message == "quit";
             std::cout << message << std::endl;
-            strcpy(message, "Hello from server!");
-            server.safeSendData(message, strlen(message));
+            if (quit) {
+                message = "bye";
+            } else {
+                message += " response!";
+            }
+            server.safeSendData(message);
         }
     } while (!quit);
 

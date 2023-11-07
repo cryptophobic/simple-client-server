@@ -60,14 +60,14 @@ protected:
 #endif
     }
 
-    bool sendData(void *buf, size_t len) const
+    size_t sendData(void *buf, size_t len) const
     {
-        return (size_t)send(_conn, (const char *)buf, len, 0) == len;
+        return (size_t)send(_conn, (const char *)buf, len, 0);
     }
 
-    bool receiveData(void *buf, size_t len) const
+    size_t receiveData(void *buf, size_t len) const
     {
-        return (size_t)recv(_conn, (char *)buf, len, 0) != 0;
+        return (size_t)recv(_conn, (char *)buf, len, 0);
     }
 
 public:

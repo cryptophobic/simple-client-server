@@ -5,17 +5,22 @@
 int main() {
 
     TcpClientSocket client(std::string("localhost"), std::string("5001"));
-    for (auto i = 2; i > 0; i--) {
+
+    std::string message;
+    do {
+
         if (!client.isConnected()) {
             client.openConnection();
         }
 
-        char message[100] = "quit";
-        client.safeSendData(message, strlen(message));
-        if (client.safeReceiveData(message, 100) > 0) {
-            std::cout << message << std::endl;
+        std::cout << message << std::endl;
+        if (message == "bye") {
+            break;
         }
-    }
+        std::cin >> message;
+
+        client.safeSendData(message);
+    } while (client.safeReceiveData(message) > 0);
     client.closeConnections();
 
     return 0;

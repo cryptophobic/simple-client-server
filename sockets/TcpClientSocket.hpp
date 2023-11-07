@@ -24,32 +24,36 @@ public:
         _conn = _sock;
     }
 
-    bool safeSendData(void *buf, size_t len)
+    bool safeSendData(const std::string& message)
     {
         if (_conn == INVALID_SOCKET) {
             std::cerr << "safeSendData: No connection" << std::endl;
             return false;
         }
 
-        if (!sendData(buf, len)) {
+        if (sendData((void *)message.c_str(), message.length()) != message.length()) {
             closeConnections();
             return false;
         }
         return true;
     }
 
-    bool safeReceiveData(void *buf, size_t len)
+    bool safeReceiveData(std::string& message)
     {
         if (_conn == INVALID_SOCKET) {
             std::cerr << "safeReceiveData: No connection" << std::endl;
             return false;
         }
 
-        if (!receiveData(buf, len)) {
-            closeConnections();
-            return false;
+        char buf[100];
+
+        if (auto length = receiveData(buf, 100); length > 0) {
+            buf[length] = 0;
+            message = buf;
+            return true;
         }
-        return true;
+        closeConnections();
+        return false;
     }
 
     void closeConnections()
@@ -57,5 +61,4 @@ public:
         closeConnection(_sock);
         _conn = _sock;
     }
-
 };

@@ -37,32 +37,34 @@ public:
         std::cout << "connected" << std::endl;
     }
 
-    bool safeSendData(void *buf, size_t len)
+    bool safeSendData(const std::string& message)
     {
         if (_conn == INVALID_SOCKET) {
             std::cerr << "safeSendData: No connection" << std::endl;
             return false;
         }
-
-        if (!sendData(buf, len)) {
+        if (sendData((void *)message.c_str(), message.length()) != message.length()) {
             closeConnection(_conn);
             return false;
         }
         return true;
     }
 
-    bool safeReceiveData(void *buf, size_t len)
+    bool safeReceiveData(std::string& message)
     {
         if (_conn == INVALID_SOCKET) {
             std::cerr << "No connection" << std::endl;
             return false;
         }
+        char buf[100];
 
-        if (!receiveData(buf, len)) {
-            closeConnection(_conn);
-            return false;
+        if (auto length = receiveData(buf, 100); length > 0) {
+            buf[length] = 0;
+            message = buf;
+            return true;
         }
-        return true;
+        closeConnection(_conn);
+        return false;
     }
 
     void closeConnections()
