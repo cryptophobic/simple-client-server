@@ -11,9 +11,10 @@ int main() {
 
         if (!client.isConnected()) {
             client.openConnection();
+            std::cout << "Go ahead, say something, server awaits" << std::endl;
         }
 
-        std::cout << message << std::endl;
+        std::cout << "server: " << message << std::endl << "client: ";
         if (message == "bye") {
             break;
         }
