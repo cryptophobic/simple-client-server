@@ -14,7 +14,7 @@ public:
     void openConnection()
     {
         // Connect to server, returning on failure
-        if (connect(_sock, _addressInfo->ai_addr, (int)_addressInfo->ai_addrlen) == INVALID_SOCKET) {
+        if (connect(_sock, _addressInfo->ai_addr, (int)_addressInfo->ai_addrlen) == SOCKET_ERROR) {
             closeConnection(_sock);
             std::cerr << "connect() failed; please make sure server is running" << std::endl;
             return;

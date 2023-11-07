@@ -2,9 +2,6 @@
 
 // Windows
 #ifdef _WIN32
-#pragma comment(lib,"ws2_32.lib")
-#define WIN32_LEAN_AND_MEAN
-#undef TEXT
 #include <winsock2.h>
 #include <ws2tcpip.h>
 
@@ -17,10 +14,10 @@ typedef int SOCKET;
 #include <unistd.h>
 #include <arpa/inet.h>
 static const int INVALID_SOCKET = -1;
+static const int SOCKET_ERROR = -1;
 #endif
 
 #include <iostream>
-#include <sstream>
 
 #ifndef _WIN32
 static void closesocket(int socket) { close(socket); }
@@ -32,11 +29,8 @@ protected:
 
     std::string _host;
     std::string _port;
-    std::stringstream _debugMessage;
 
     struct addrinfo * _addressInfo;
-
-    bool _connected;
 
     SOCKET _sock = INVALID_SOCKET;
     SOCKET _conn = INVALID_SOCKET;
@@ -74,9 +68,6 @@ public:
 
     TcpSocket(std::string &host, std::string &port) : _host(std::move(host)), _port(std::move(port))
     {
-        // No connection yet
-        _connected = false;
-
         // Initialize Winsock, returning on failure
         if (!initWinsock()) return;
 
@@ -100,6 +91,10 @@ public:
             cleanup();
             return;
         }
+    }
+
+    ~TcpSocket() {
+        freeaddrinfo(_addressInfo);
     }
 
     void closeConnection(SOCKET &socket)

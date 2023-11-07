@@ -12,7 +12,7 @@ public:
             : TcpSocket(host, port)
     {
         // Bind socket to address
-        if (bind(_sock, _addressInfo->ai_addr, (int)_addressInfo->ai_addrlen) == INVALID_SOCKET) {
+        if (bind(_sock, _addressInfo->ai_addr, (int)_addressInfo->ai_addrlen) == SOCKET_ERROR) {
             closesocket(_sock);
             std::cerr << "bind() failed" << std::endl;
             return;
@@ -30,7 +30,8 @@ public:
         // Accept connection, exiting on failure
         std::cout << "Waiting for client to connect on " << _host << ":" << _port << std::endl;
         _conn = accept(_sock, nullptr, nullptr);
-        if (_conn == INVALID_SOCKET) {
+        if (_conn == SOCKET_ERROR) {
+            _conn = INVALID_SOCKET;
             std::cerr << "accept() failed" << std::endl;
             return;
         }
