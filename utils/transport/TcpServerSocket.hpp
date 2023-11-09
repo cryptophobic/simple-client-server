@@ -8,19 +8,22 @@ class TcpServerSocket : public TcpSocket {
 
 public:
 
-    TcpServerSocket(std::string host, std::string port)
+    TcpServerSocket(const char * host, const char * port)
             : TcpSocket(host, port)
     {
-        // Bind socket to address
-        if (bind(_sock, _addressInfo->ai_addr, (int)_addressInfo->ai_addrlen) == SOCKET_ERROR) {
-            closesocket(_sock);
-            std::cerr << "bind() failed" << std::endl;
-            return;
-        }
     }
 
     void acceptConnection()
     {
+        if (_addressInfo == nullptr) {
+            socketInit();
+            // Bind socket to address
+            if (bind(_sock, _addressInfo->ai_addr, (int)_addressInfo->ai_addrlen) == SOCKET_ERROR) {
+                closesocket(_sock);
+                std::cerr << "bind() failed" << std::endl;
+                return;
+            }
+        }
         // Listen for a connection, exiting on failure
         if (listen(_sock, 1)  == -1) {
             std::cerr << "listen() failed" << std::endl;
@@ -28,7 +31,7 @@ public:
         }
 
         // Accept connection, exiting on failure
-        std::cout << "Waiting for client to connect on " << _host << ":" << _port << std::endl;
+        std::cout << "Waiting for InvoiceMasterClient to connect on " << _host << ":" << _port << std::endl;
         _conn = accept(_sock, nullptr, nullptr);
         if (_conn == SOCKET_ERROR) {
             _conn = INVALID_SOCKET;

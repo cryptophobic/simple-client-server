@@ -18,10 +18,13 @@ static const int SOCKET_ERROR = -1;
 #endif
 
 #include <iostream>
+#include <utility>
 
 #ifndef _WIN32
 static void closesocket(int socket) { close(socket); }
 #endif
+
+#define TRANSPORT_BUFFER_LIMIT 1000
 
 class TcpSocket {
 
@@ -30,7 +33,7 @@ protected:
     std::string _host;
     std::string _port;
 
-    struct addrinfo * _addressInfo;
+    struct addrinfo * _addressInfo = nullptr;
 
     SOCKET _sock = INVALID_SOCKET;
     SOCKET _conn = INVALID_SOCKET;
@@ -64,20 +67,17 @@ protected:
         return (size_t)recv(_conn, (char *)buf, len, 0);
     }
 
-public:
-
-    TcpSocket(std::string &host, std::string &port) : _host(std::move(host)), _port(std::move(port))
+    void socketInit()
     {
         // Initialize Winsock, returning on failure
         if (!initWinsock()) return;
 
-        // Set up client address info
+        // Set up InvoiceMasterClient address info
         struct addrinfo hints{};
         hints.ai_family = AF_INET;
         hints.ai_socktype = SOCK_STREAM;
 
         // Resolve the server address and port, returning on failure
-        _addressInfo = nullptr;
         if (int iResult = getaddrinfo(_host.c_str(), _port.c_str(), &hints, &_addressInfo); iResult != 0 ) {
             std::cerr << "getaddrinfo() failed with error: " << iResult;
             cleanup();
@@ -93,16 +93,21 @@ public:
         }
     }
 
-    ~TcpSocket() {
-        freeaddrinfo(_addressInfo);
-    }
-
-    void closeConnection(SOCKET &socket)
+    static void closeConnection(SOCKET &socket)
     {
         if (socket == INVALID_SOCKET) return;
         std::cout << "Disconnected " << socket << std::endl;
         closesocket(socket);
         socket = INVALID_SOCKET;
+    }
+
+public:
+
+    TcpSocket(const char* host, const char* port) : _host(host), _port(port)
+    {}
+
+    ~TcpSocket() {
+        freeaddrinfo(_addressInfo);
     }
 
     bool isConnected() const

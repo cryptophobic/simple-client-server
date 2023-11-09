@@ -1,6 +1,6 @@
-#include "sockets/TcpServerSocket.hpp"
+#include "utils/transport/TcpServerSocket.hpp"
 #include <iostream>
-#include <cstring>
+#include <string>
 
 int main() {
 
@@ -13,6 +13,7 @@ int main() {
         }
         std::string message;
         if (server.safeReceiveData(message)) {
+            server.safeSendData("OK");
             quit = message == "quit";
             std::cout << message << std::endl;
             if (quit) {

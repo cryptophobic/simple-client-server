@@ -11,14 +11,19 @@ IF (WIN32)
     set(ALL_LIBS ws2_32)
 ENDIF()
 
-add_executable(client client.cpp
-        sockets/TcpSocket.hpp
-        sockets/TcpClientSocket.hpp)
+add_executable(InvoiceMasterClient InvoiceMasterClient.cpp
+        utils/transport/TcpSocket.hpp
+        utils/transport/TcpClientSocket.hpp
+        InvoiceMasterClient/Application.cpp
+        InvoiceMasterClient/Application.hpp
+        InvoiceMasterClient/ServiceConnector.cpp
+        InvoiceMasterClient/ServiceConnector.hpp
+        settings/ServiceList.hpp)
 
-target_link_libraries(client ${ALL_LIBS})
+target_link_libraries(InvoiceMasterClient ${ALL_LIBS})
 
-add_executable(server server.cpp
-        sockets/TcpSocket.hpp
-        sockets/TcpServerSocket.hpp)
+add_executable(InvoiceMasterServer InvoiceMasterServer.cpp
+        utils/transport/TcpSocket.hpp
+        utils/transport/TcpServerSocket.hpp)
 
 target_link_libraries(server ${ALL_LIBS})

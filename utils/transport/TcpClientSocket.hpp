@@ -6,13 +6,16 @@ class TcpClientSocket : public TcpSocket {
 
 public:
 
-    TcpClientSocket(std::string host, std::string port)
+    TcpClientSocket(const char * host, const char * port)
             : TcpSocket(host, port)
     {
     }
 
     void openConnection()
     {
+        if (_addressInfo == nullptr) {
+            socketInit();
+        }
         // Connect to server, returning on failure
         if (connect(_sock, _addressInfo->ai_addr, (int)_addressInfo->ai_addrlen) == SOCKET_ERROR) {
             closeConnection(_sock);
@@ -20,7 +23,7 @@ public:
             return;
         }
 
-        // For a client, the connection is the same as the main socket
+        // For a InvoiceMasterClient, the connection is the same as the main socket
         _conn = _sock;
     }
 
