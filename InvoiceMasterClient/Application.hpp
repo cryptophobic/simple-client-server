@@ -9,7 +9,7 @@ namespace InvoiceMasterClient {
     public:
         void run();
     private:
-        bool isAuthorised = false;
+        bool isAuthorized = false;
         ServiceConnector connector;
         std::unique_ptr<Response> controller(settings::ServiceSignature command);
         std::vector<std::string> login();

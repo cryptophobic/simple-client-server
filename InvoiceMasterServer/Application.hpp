@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Service/Listener.hpp"
-#include "model/Authorisation.hpp"
+#include "model/AuthenticationManager.hpp"
 
 namespace InvoiceMasterServer {
     class Application {
@@ -9,7 +9,7 @@ namespace InvoiceMasterServer {
         void run();
     private:
         //Preloaded services
-        Authorisation loginService;
+        AuthenticationManager loginService;
 
         bool quit = false;
         Listener service;

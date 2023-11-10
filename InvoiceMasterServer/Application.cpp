@@ -21,13 +21,13 @@ namespace InvoiceMasterServer {
         std::unique_ptr<Response> response = std::make_unique<Response>();
         switch (request->parsed->command) {
             case settings::services.login.code:
-                loginService.authorise(request->parsed->arguments[0], request->parsed->arguments[1]);
-                if (loginService.isAuthorised()) {
+                loginService.authorize(request->parsed->arguments[0], request->parsed->arguments[1]);
+                if (loginService.isAuthorized()) {
                     return std::make_unique<Response>(settings::responseSuccess, "");
                 }
                 break;
             case settings::services.admin.code:
-                if (loginService.isAuthorised()) {
+                if (loginService.isAuthorized()) {
                     quit = true;
                     return std::make_unique<Response>(settings::responseSuccess, "");
                 }

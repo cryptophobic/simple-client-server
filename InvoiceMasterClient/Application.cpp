@@ -7,9 +7,9 @@ namespace InvoiceMasterClient {
         while(!quit && connector.isConnected()) {
             switch (menu()) {
                 case '1':
-                    while (!isAuthorised) {
+                    while (!isAuthorized) {
                         std::unique_ptr<Response> response = controller(settings::services.login);
-                        isAuthorised = response->parsed->responseCode == settings::responseSuccess;
+                        isAuthorized = response->parsed->responseCode == settings::responseSuccess;
                     }
                     break;
                 case '2':
@@ -47,8 +47,8 @@ namespace InvoiceMasterClient {
     char Application::menu()
     {
         char choice;
-        if (!isAuthorised) {
-            std::cout << "1. Authorise" << std::endl;
+        if (!isAuthorized) {
+            std::cout << "1. Authorize" << std::endl;
         }
         std::cout << "2. Quit" << std::endl << "3. Quit server" << std::endl;
         std::cout << ":> ";

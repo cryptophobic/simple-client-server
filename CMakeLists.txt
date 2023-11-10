@@ -38,7 +38,7 @@ add_executable(InvoiceMasterServer InvoiceMasterServer.cpp
         InvoiceMasterServer/Service/Request.hpp
         InvoiceMasterServer/Service/Response.cpp
         InvoiceMasterServer/Service/Response.hpp
-        InvoiceMasterServer/model/Authorisation.cpp
-        InvoiceMasterServer/model/Authorisation.hpp)
+        InvoiceMasterServer/model/AuthenticationManager.cpp
+        InvoiceMasterServer/model/AuthenticationManager.hpp)
 
 target_link_libraries(InvoiceMasterServer ${ALL_LIBS})
