@@ -22,6 +22,15 @@ public:
             std::cerr << "connect() failed; please make sure server is running" << std::endl;
             return;
         }
+#ifdef _WIN32
+        DWORD timeout = SOCKET_READ_TIMEOUT_SEC * 1000;
+        setsockopt(_sock, SOL_SOCKET, SO_RCVTIMEO, (char*)&timeout, sizeof(timeout));
+#else
+        struct timeval timeout;
+        timeout.tv_sec = SOCKET_READ_TIMEOUT_SEC;
+        timeout.tv_usec = 0;
+        setsockopt(_sock, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
+#endif
 
         // For a InvoiceMasterClient, the connection is the same as the main socket
         _conn = _sock;

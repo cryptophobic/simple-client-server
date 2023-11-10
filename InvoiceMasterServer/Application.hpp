@@ -1,5 +1,18 @@
 #pragma once
 
-class Application {
+#include "Service/Listener.hpp"
+#include "model/Authorisation.hpp"
 
-};
+namespace InvoiceMasterServer {
+    class Application {
+    public:
+        void run();
+    private:
+        //Preloaded services
+        Authorisation loginService;
+
+        bool quit = false;
+        Listener service;
+        std::unique_ptr<Response> controller(std::unique_ptr<Request> request);
+    };
+}

@@ -1,15 +1,19 @@
 #pragma once
 
-#include "ServiceConnector.hpp"
+#include "ServiceConnector/ServiceConnector.hpp"
+#include "ServiceConnector/Response.hpp"
 
 namespace InvoiceMasterClient {
 
     class Application {
     public:
-        void Run();
-        ServiceConnector connector; // incapsulates utils transport business logic
-
-        //login(user, password);
-
+        void run();
+    private:
+        bool isAuthorised = false;
+        ServiceConnector connector;
+        std::unique_ptr<Response> controller(settings::ServiceSignature command);
+        std::vector<std::string> login();
+        char menu();
+        bool quit = false;
     };
 }

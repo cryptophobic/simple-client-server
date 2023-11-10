@@ -25,6 +25,7 @@ static void closesocket(int socket) { close(socket); }
 #endif
 
 #define TRANSPORT_BUFFER_LIMIT 1000
+#define SOCKET_READ_TIMEOUT_SEC 2;
 
 class TcpSocket {
 

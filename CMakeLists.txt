@@ -16,14 +16,29 @@ add_executable(InvoiceMasterClient InvoiceMasterClient.cpp
         utils/transport/TcpClientSocket.hpp
         InvoiceMasterClient/Application.cpp
         InvoiceMasterClient/Application.hpp
-        InvoiceMasterClient/ServiceConnector.cpp
-        InvoiceMasterClient/ServiceConnector.hpp
-        settings/ServiceList.hpp)
+        InvoiceMasterClient/ServiceConnector/ServiceConnector.cpp
+        InvoiceMasterClient/ServiceConnector/ServiceConnector.hpp
+        settings/ServiceList.hpp
+        InvoiceMasterClient/ServiceConnector/Request.cpp
+        InvoiceMasterClient/ServiceConnector/Request.hpp
+        InvoiceMasterClient/ServiceConnector/Response.cpp
+        InvoiceMasterClient/ServiceConnector/Response.hpp)
 
 target_link_libraries(InvoiceMasterClient ${ALL_LIBS})
 
 add_executable(InvoiceMasterServer InvoiceMasterServer.cpp
         utils/transport/TcpSocket.hpp
-        utils/transport/TcpServerSocket.hpp)
+        utils/transport/TcpServerSocket.hpp
+        settings/ServiceList.hpp
+        InvoiceMasterServer/Application.hpp
+        InvoiceMasterServer/Application.cpp
+        InvoiceMasterServer/Service/Listener.cpp
+        InvoiceMasterServer/Service/Listener.hpp
+        InvoiceMasterServer/Service/Request.cpp
+        InvoiceMasterServer/Service/Request.hpp
+        InvoiceMasterServer/Service/Response.cpp
+        InvoiceMasterServer/Service/Response.hpp
+        InvoiceMasterServer/model/Authorisation.cpp
+        InvoiceMasterServer/model/Authorisation.hpp)
 
-target_link_libraries(server ${ALL_LIBS})
+target_link_libraries(InvoiceMasterServer ${ALL_LIBS})
