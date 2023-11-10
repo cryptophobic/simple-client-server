@@ -27,9 +27,10 @@ namespace InvoiceMasterServer {
                 }
                 break;
             case settings::services.admin.code:
-                quit = true;
-                return std::make_unique<Response>(settings::responseSuccess, "");
-
+                if (loginService.isAuthorised()) {
+                    quit = true;
+                    return std::make_unique<Response>(settings::responseSuccess, "");
+                }
             default:
                 break;
         }
