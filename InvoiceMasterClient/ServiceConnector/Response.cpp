@@ -1,5 +1,6 @@
 #include "Response.hpp"
 #include <sstream>
+#include <iostream>
 
 namespace InvoiceMasterClient {
 
@@ -20,9 +21,15 @@ namespace InvoiceMasterClient {
 
         if (!isValidResponseCode(responseItem)) {
             parsed->responseCode = settings::responseCorruptedData;
+            std::cerr << "Corrupted message" << std::endl;
             return;
         }
         parsed->responseCode = responseItem[0];
+        if (parsed->responseCode == settings::responseSuccess) {
+            std::cout << "Success!" << std::endl;
+        } else {
+            std::cout << "Error" << std::endl;
+        }
         while (getline(ss, responseItem, settings::delimiter)) {
             if (isValidResponseItem(responseItem)) {
                 parsed->body.emplace_back(responseItem);

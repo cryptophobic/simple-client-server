@@ -19,7 +19,7 @@ namespace InvoiceMasterClient {
         }
         do {
             clientSocket.safeReceiveData(message);
-            std::cout << message << std::endl;
+            //std::cout << message << std::endl;
             response += message;
         } while (!message.empty() && message.back() != settings::terminateChar);
         if (!response.empty()) {

@@ -1,0 +1,56 @@
+namespace InvoiceMasterServer
+{
+    class AuthenticationManager {
+        verifyCredentials(login, password);
+    }
+
+    class InputDataValidator {
+        validate(data) {
+            if validateLength();
+            ...
+        }
+
+        private:
+            validateLength();
+            validate()
+    }
+
+    class Application
+    {
+        AuthenticationManager manager();
+        InputDataValidator validator();
+
+        listen()  // process commands
+        {
+            command = ....
+            if !validator.validate(command)
+            {
+                ....
+            }
+        }
+    }
+}
+
+ServiceConnector connector
+{
+    esteblishConnection();
+    sendCommand();
+    closeConnection();
+
+}
+
+namespace InvoiceMasterClient
+{
+    class Application
+    {
+        ServiceConnector connector; // incapsulates utils transport business logic
+
+        login(user, password);
+    }
+}
+
+InvoiceMasterServer::Application serverApp();
+serverApp.listen();
+
+InvoiceMasterClient::Application clientApp();
+clientApp.login("", "")
