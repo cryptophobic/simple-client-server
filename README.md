@@ -1,22 +1,4 @@
 # simple crossplatform TCP client server Application
 
-```
-dmytrouglach@d cmake-build-debug % ./server
-Waiting for client to connect on localhost:5001
-connected
-hello
-quit
-Disconnected 5
-Disconnected 3
-```
+https://github.com/cryptophobic/simple-client-server/assets/1626412/6d2669a6-1436-4a1a-828a-aff71f0576ba
 
-```
-dmytrouglach@d cmake-build-debug % ./client
-Go ahead, say something, server awaits
-server:
-client: hello
-server: hello response!
-client: quit
-server: bye
-client: Disconnected 3
-```
