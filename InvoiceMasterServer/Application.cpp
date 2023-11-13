@@ -18,23 +18,26 @@ namespace InvoiceMasterServer {
     //TODO: going to move to controller component
     std::unique_ptr<Response> Application::controller(std::unique_ptr<Request> request)
     {
-        std::unique_ptr<Response> response = std::make_unique<Response>();
         switch (request->parsed->command) {
             case settings::services.login.code:
                 loginService.authorize(request->parsed->arguments[0], request->parsed->arguments[1]);
                 if (loginService.isAuthorized()) {
-                    return std::make_unique<Response>(settings::responseSuccess, "");
+                    return std::make_unique<Response>(settings::responseSuccess, settings::authorized, "");
                 }
                 break;
             case settings::services.admin.code:
                 if (loginService.isAuthorized()) {
                     quit = true;
-                    return std::make_unique<Response>(settings::responseSuccess, "");
+                    return std::make_unique<Response>(settings::responseSuccess, settings::disconnected, "");
                 }
+            case settings::services.quit.code:
+                return std::make_unique<Response>(settings::responseSuccess, settings::disconnected, "");
             default:
                 break;
         }
-        return std::move(response);
+        return std::make_unique<Response>(
+                settings::responseError,
+                loginService.isAuthorized() ? settings::authorized : settings::notAuthorized,
+                "");
     }
-
 }

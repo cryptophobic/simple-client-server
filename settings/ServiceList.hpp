@@ -11,12 +11,19 @@ namespace settings {
 
     constexpr char requestLogin = 'l';
     constexpr char adminAccess = 'a';
-    const std::set<const char>commands {requestLogin, adminAccess};
+    constexpr char mainMenu = 'm';
+    constexpr char disconnect = 'd';
+    const std::set<const char>commands {requestLogin, adminAccess, disconnect};
 
     constexpr char responseError = '1';
     constexpr char responseSuccess = '0';
     constexpr char responseCorruptedData = '2';
     const std::set<const char>responseCodes {responseError, responseSuccess};
+
+    constexpr char authorized = '1';
+    constexpr char notAuthorized = '0';
+    constexpr char disconnected = '3';
+    const std::set<const char>authorizedCodes {authorized, notAuthorized, disconnected};
 
 
     struct ServiceSignature {
@@ -30,12 +37,16 @@ namespace settings {
         //ServiceSignature licenceActivation;
         //ServiceSignature registration;
         //ServiceSignature softwareUpdate;
-        const ServiceSignature login;
         const ServiceSignature admin;
+        const ServiceSignature login;
+        const ServiceSignature mainMenu;
+        const ServiceSignature quit;
     };
 
     constexpr ServiceList services {
+        .admin = {adminAccess, 1},
         .login = {requestLogin, 2},
-        .admin = {adminAccess, 1}
+        .mainMenu = {mainMenu, 0},
+        .quit = {disconnect, 0},
     };
 }

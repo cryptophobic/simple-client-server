@@ -12,17 +12,29 @@ IF (WIN32)
 ENDIF()
 
 add_executable(InvoiceMasterClient InvoiceMasterClient.cpp
-        utils/transport/TcpSocket.hpp
-        utils/transport/TcpClientSocket.hpp
-        InvoiceMasterClient/Application.cpp
-        InvoiceMasterClient/Application.hpp
-        InvoiceMasterClient/ServiceConnector/ServiceConnector.cpp
-        InvoiceMasterClient/ServiceConnector/ServiceConnector.hpp
-        settings/ServiceList.hpp
         InvoiceMasterClient/ServiceConnector/Request.cpp
         InvoiceMasterClient/ServiceConnector/Request.hpp
         InvoiceMasterClient/ServiceConnector/Response.cpp
-        InvoiceMasterClient/ServiceConnector/Response.hpp)
+        InvoiceMasterClient/ServiceConnector/Response.hpp
+        InvoiceMasterClient/ServiceConnector/ServiceConnector.cpp
+        InvoiceMasterClient/ServiceConnector/ServiceConnector.hpp
+        InvoiceMasterClient/views/AdminAccess.cpp
+        InvoiceMasterClient/views/AdminAccess.hpp
+        InvoiceMasterClient/views/Login.cpp
+        InvoiceMasterClient/views/Login.hpp
+        InvoiceMasterClient/views/MainMenu.cpp
+        InvoiceMasterClient/views/MainMenu.hpp
+        InvoiceMasterClient/Application.cpp
+        InvoiceMasterClient/Application.hpp
+        InvoiceMasterClient/Controller.cpp
+        InvoiceMasterClient/Controller.hpp
+        InvoiceMasterClient/View.cpp
+        InvoiceMasterClient/View.hpp
+        utils/transport/TcpSocket.hpp
+        utils/transport/TcpClientSocket.hpp
+        settings/ServiceList.hpp
+        InvoiceMasterClient/views/Quit.cpp
+        InvoiceMasterClient/views/Quit.hpp)
 
 target_link_libraries(InvoiceMasterClient ${ALL_LIBS})
 
@@ -39,6 +51,7 @@ add_executable(InvoiceMasterServer InvoiceMasterServer.cpp
         InvoiceMasterServer/Service/Response.cpp
         InvoiceMasterServer/Service/Response.hpp
         InvoiceMasterServer/model/AuthenticationManager.cpp
-        InvoiceMasterServer/model/AuthenticationManager.hpp)
+        InvoiceMasterServer/model/AuthenticationManager.hpp
+)
 
 target_link_libraries(InvoiceMasterServer ${ALL_LIBS})

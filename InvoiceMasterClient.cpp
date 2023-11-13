@@ -1,7 +1,6 @@
 #include "InvoiceMasterClient/Application.hpp"
 
 int main() {
-    InvoiceMasterClient::Application app;
-    app.run();
+    InvoiceMasterClient::Application::run();
     return 0;
 }

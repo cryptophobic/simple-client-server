@@ -2,18 +2,16 @@
 
 #include "ServiceConnector/ServiceConnector.hpp"
 #include "ServiceConnector/Response.hpp"
+#include "Controller.hpp"
 
 namespace InvoiceMasterClient {
 
     class Application {
     public:
-        void run();
+        static void run();
+        static bool isAuthorized();
     private:
-        bool isAuthorized = false;
-        ServiceConnector connector;
-        std::unique_ptr<Response> controller(settings::ServiceSignature command);
-        std::vector<std::string> login();
-        char menu();
-        bool quit = false;
+        static bool authorized;
+        static ServiceConnector connector;
     };
 }

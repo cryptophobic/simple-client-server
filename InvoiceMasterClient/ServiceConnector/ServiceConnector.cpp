@@ -36,5 +36,4 @@ namespace InvoiceMasterClient {
     bool ServiceConnector::isConnected() {
         return clientSocket.isConnected();
     }
-
 } // InvoiceMasterClient

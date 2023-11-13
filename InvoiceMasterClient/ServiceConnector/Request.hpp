@@ -9,11 +9,11 @@ namespace InvoiceMasterClient {
     class Request {
     private:
         settings::ServiceSignature _command;
-        const std::vector<std::string>& _arguments;
+        std::vector<std::string> _arguments;
 
     public:
-        Request(settings::ServiceSignature command, const std::vector<std::string>& arguments)
-            : _arguments(arguments), _command(command)
+        explicit Request(settings::ServiceSignature command, std::vector<std::string> arguments)
+            : _arguments(std::move(arguments)), _command(command)
         {};
 
         std::vector<std::string> getParsed();

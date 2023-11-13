@@ -7,15 +7,19 @@
 namespace InvoiceMasterClient {
 
     struct ResponseStructure {
-        char responseCode;
+        char responseCode = settings::responseCorruptedData;
+        bool isAuthorized = false;
+        bool disconnected = false;
         std::vector<std::string> body{};
     };
 
     class Response {
     private:
         const std::string _responseText;
-        bool isValidResponseCode (std::string& code);
-        bool isValidResponseItem (std::string& item);
+        void parseAndValidateResponseCode(std::string& code) const;
+        void parseAndValidateAuthorizedSection(std::string& code) const;
+        void parseAndValidateBody(std::string& code) const;
+
         void parse();
 
     public:

@@ -1,10 +1,10 @@
 #include "Response.hpp"
 #include "../../utils/transport/TcpSocket.hpp"
-#include "../../settings/ServiceList.hpp"
 
 namespace InvoiceMasterServer {
 
-    Response::Response(char responseCode, const std::string& responseBody) : _responseCode(responseCode), _responseBody(std::move(responseBody))
+    Response::Response(char responseCode, char authorized, const std::string& responseBody)
+    : _responseCode(responseCode), _authorized(authorized), _responseBody(std::move(responseBody))
     {
     }
 
@@ -12,8 +12,10 @@ namespace InvoiceMasterServer {
     {
         std::vector<std::string> chunks = {1, std::string{}};
         int currentChunk = 0;
-        int limit = TRANSPORT_BUFFER_LIMIT - 2;
+        int limit = TRANSPORT_BUFFER_LIMIT - 4;
         chunks[currentChunk] = _responseCode;
+        chunks[currentChunk] += settings::delimiter;
+        chunks[currentChunk] += _authorized;
         chunks[currentChunk] += settings::delimiter;
         int positionStart = 0;
 

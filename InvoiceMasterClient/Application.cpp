@@ -1,74 +1,33 @@
 #include "Application.hpp"
+#include "View.hpp"
 
 namespace InvoiceMasterClient {
+
+    bool Application::authorized;
+    ServiceConnector Application::connector;
+
     void Application::run()
     {
         connector.establishConnection();
-        while(!quit && connector.isConnected()) {
-            switch (menu()) {
-                case '1':
-                    while (!isAuthorized) {
-                        std::unique_ptr<Response> response = controller(settings::services.login);
-                        isAuthorized = response->parsed->responseCode == settings::responseSuccess;
-                    }
-                    break;
-                case '2':
-                    quit = true;
-                    break;
-                case '3':
-                    std::unique_ptr<Response> response = controller(settings::services.admin);
-                    if (response->parsed->responseCode == settings::responseSuccess) {
-                        std::cout << "Server has been shut down" << std::endl;
-                        quit = true;
-                    }
-                    break;
+        std::unique_ptr<CommandStruct> command = std::make_unique<CommandStruct>();
+        while(connector.isConnected()) {
+            std::unique_ptr<View> view = Controller::run(command->internalCommand->code);
+            command = view->run();
+            if (command->request != nullptr) {
+                std::unique_ptr<Response> response = connector.sendCommand(std::move(command->request));
+                //TODO: response body handling
+                authorized = response->parsed->isAuthorized;
+                if (response->parsed->disconnected) {
+                    connector.closeConnection();
+                }
             }
         }
         std::cout << "Bye!" << std::endl;
         connector.closeConnection();
     }
 
-    //TODO: going to move to controller component
-    std::unique_ptr<Response> Application::controller(settings::ServiceSignature command)
+    bool Application::isAuthorized()
     {
-        std::vector<std::string> arguments{};
-        switch (command.code) {
-            case settings::services.login.code:
-                arguments = login();
-                break;
-            case settings::services.admin.code:
-                arguments.emplace_back("quit");
-            default:
-                break;
-        }
-        return connector.sendCommand(std::make_unique<Request>(command, arguments));
-    }
-
-    char Application::menu()
-    {
-        char choice;
-        if (!isAuthorized) {
-            std::cout << "1. Authorize" << std::endl;
-        }
-        std::cout << "2. Quit" << std::endl << "3. Quit server" << std::endl;
-        std::cout << ":> ";
-        std::cin >> choice;
-
-        return choice;
-    }
-
-    //TODO: going to move to view component
-    std::vector<std::string> Application::login()
-    {
-        std::vector<std::string> arguments{settings::services.login.argumentsNumber, ""};
-
-        std::cout << "Please enter your login and password separated by space" << std::endl;
-        std::cout << ":> ";
-
-        for (auto & argument: arguments) {
-            std::cin >> argument;
-        }
-
-        return arguments;
+        return authorized;
     }
 }
