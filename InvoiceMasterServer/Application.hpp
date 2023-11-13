@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Service/Listener.hpp"
-#include "model/AuthenticationManager.hpp"
+#include "models/AuthenticationManager.hpp"
 
 namespace InvoiceMasterServer {
     class Application {
