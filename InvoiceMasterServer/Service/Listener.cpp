@@ -6,6 +6,9 @@ namespace InvoiceMasterServer {
         if (!serverSocket.isConnected()) {
             serverSocket.acceptConnection();
         }
+        if (!serverSocket.isServerUp()) {
+            throw std::runtime_error("Invalid bind server socket. Most probably port is in use.");
+        }
     }
 
     std::unique_ptr<Request> Listener::receiveCommand() {

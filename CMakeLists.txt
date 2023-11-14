@@ -28,7 +28,6 @@ add_executable(InvoiceMasterClient InvoiceMasterClient.cpp
         InvoiceMasterClient/Application.hpp
         InvoiceMasterClient/Controller.cpp
         InvoiceMasterClient/Controller.hpp
-        InvoiceMasterClient/View.cpp
         InvoiceMasterClient/View.hpp
         utils/transport/TcpSocket.hpp
         utils/transport/TcpClientSocket.hpp

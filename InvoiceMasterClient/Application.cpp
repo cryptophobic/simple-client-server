@@ -14,10 +14,17 @@ namespace InvoiceMasterClient {
             std::unique_ptr<View> view = Controller::run(command->internalCommand->code);
             command = view->run();
             if (command->request != nullptr) {
-                std::unique_ptr<Response> response = connector.sendCommand(std::move(command->request));
-                //TODO: response body handling
-                authorized = response->parsed->isAuthorized;
-                if (response->parsed->disconnected) {
+                try {
+                    std::unique_ptr<Response> response = connector.sendCommand(std::move(command->request));
+                    //TODO: response body handling
+                    authorized = response->parsed->isAuthorized;
+                    if (response->parsed->disconnected) {
+                        connector.closeConnection();
+                    }
+
+                }
+                catch (std::runtime_error& e) {
+                    std::cerr << e.what() << std::endl;
                     connector.closeConnection();
                 }
             }

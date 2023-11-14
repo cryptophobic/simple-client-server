@@ -15,10 +15,14 @@ namespace InvoiceMasterClient {
     {
         std::string message, response;
         for(auto & chunk: request->getParsed()) {
-            clientSocket.safeSendData(chunk);
+            if (!clientSocket.safeSendData(chunk)) {
+                throw std::runtime_error("sendCommand: cannot send command");
+            }
         }
         do {
-            clientSocket.safeReceiveData(message);
+            if (!clientSocket.safeReceiveData(message)) {
+                throw std::runtime_error("sendCommand: cannot receive data");
+            }
             //std::cout << message << std::endl;
             response += message;
         } while (!message.empty() && message.back() != settings::terminateChar);

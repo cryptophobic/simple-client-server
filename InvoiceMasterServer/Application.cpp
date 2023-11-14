@@ -5,7 +5,13 @@ namespace InvoiceMasterServer {
 
     void Application::run() {
         while (!quit) {
-            service.listen();
+            try {
+                service.listen();
+            }
+            catch (std::runtime_error& e) {
+                std::cerr << e.what() << std::endl;
+                quit = true;
+            }
 
             while (service.isClientConnected()) {
                 std::unique_ptr<Request> request = service.receiveCommand();

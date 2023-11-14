@@ -19,7 +19,7 @@ public:
             socketInit();
             // Bind socket to address
             if (bind(_sock, _addressInfo->ai_addr, (int)_addressInfo->ai_addrlen) == SOCKET_ERROR) {
-                closesocket(_sock);
+                closeConnection(_sock);
                 std::cerr << "bind() failed" << std::endl;
                 return;
             }
@@ -69,6 +69,11 @@ public:
         }
         closeConnection(_conn);
         return false;
+    }
+
+    bool isServerUp()
+    {
+        return _sock != INVALID_SOCKET;
     }
 
     void closeConnections()

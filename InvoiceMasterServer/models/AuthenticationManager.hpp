@@ -11,7 +11,7 @@ namespace InvoiceMasterServer {
 
         bool _authorized;
     public:
-        bool isAuthorized();
+        bool isAuthorized() const;
         bool authorize (const std::string& login, const std::string& password);
     };
 

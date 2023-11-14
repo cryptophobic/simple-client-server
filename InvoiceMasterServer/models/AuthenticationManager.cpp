@@ -2,7 +2,7 @@
 #include "../../settings/ServiceList.hpp"
 
 namespace InvoiceMasterServer {
-    bool AuthenticationManager::isAuthorized()
+    bool AuthenticationManager::isAuthorized() const
     {
         return _authorized;
     }
