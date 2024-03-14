@@ -1,30 +1,35 @@
 #include <iostream>
 #include <memory>
 #include "AdminAccess.hpp"
-#include "../../settings/ServiceList.hpp"
+#include "protocol/ApiAccess.hpp"
+#include "protocol/Request.hpp"
 
 namespace InvoiceMasterClient {
     std::unique_ptr<CommandStruct> AdminAccess::run()
     {
         char choice;
-        std::cout << "1. Server shut down" << std::endl;
-        std::cout << "2. Main menu" << std::endl;
-        std::cout << ":> ";
-        std::cin >> choice;
+        context->userOutputSystem->outputLine("0. Main menu");
+        context->userOutputSystem->outputLine("1. Server shut down");
+        context->userOutputSystem->output(":> ");
+        context->userInputSystem->read(choice);
+        auto command = std::make_unique<CommandStruct>();
 
-        switch(choice) {
+        switch (choice) {
+            case '0':
+                return command;
             case '1': {
-                std::unique_ptr<Request> request = std::make_unique<Request>(
-                        settings::services.admin,
-                        std::vector<std::string>{"quit"});
-                std::unique_ptr<CommandStruct> command = std::make_unique<CommandStruct>();
-                command->internalCommand = std::make_unique<settings::ServiceSignature>(settings::services.quit);
-                command->request = std::move(request);
+                command->internalCommand = protocol::requestDisconnect;
+                command->request = protocol::Request::build({
+                    protocol::requestAdminAccess,
+                    std::vector<std::string>{"quit"}});
 
-                return std::move(command);
+                return command;
             }
-            default:
-                return std::make_unique<CommandStruct>();
+            default: {
+                context->userOutputSystem->outputLine("Incorrect input");
+                command->internalCommand = protocol::requestAdminAccess;
+                return command;
+            }
         }
     }
 } // InvoiceMasterClient

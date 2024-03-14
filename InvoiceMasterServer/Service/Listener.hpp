@@ -1,21 +1,22 @@
 #pragma once
 
-#include "../../utils/transport/TcpServerSocket.hpp"
-#include "../../settings/ServiceList.hpp"
-#include "Request.hpp"
-#include "Response.hpp"
+#include "transport/TcpServerSocket.hpp"
+#include "transport/SSLServer.hpp"
+#include "config/settings.hpp"
+#include <string>
+#include <vector>
 
 namespace InvoiceMasterServer {
 
     class Listener {
-    private:
-        TcpServerSocket serverSocket;
+    protected:
+        transport::SSLServer serverSocket;
     public:
         Listener() : serverSocket(settings::hostName, settings::port) {}
         void listen();
         bool isClientConnected();
-        std::unique_ptr<Request> receiveCommand();
-        void sendResponse(std::unique_ptr<Response>);
+        void read(std::string&);
+        void sendResponse(std::string&);
     };
 
 } // InvoiceMasterServer

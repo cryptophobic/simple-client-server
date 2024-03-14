@@ -1,4 +1,5 @@
 #include "Listener.hpp"
+#include "protocol/Agreements.hpp"
 
 namespace InvoiceMasterServer {
     void Listener::listen()
@@ -11,28 +12,27 @@ namespace InvoiceMasterServer {
         }
     }
 
-    std::unique_ptr<Request> Listener::receiveCommand() {
-        std::string message, request;
-
+    void Listener::read(std::string &message)
+    {
+        std::string request;
+        message.clear();
+        message.reserve(TRANSPORT_BUFFER_LIMIT);
         do {
-            serverSocket.safeReceiveData(message);
-            std::cout << message << std::endl;
-            request += message;
-        } while (!message.empty() && message.back() != settings::terminateChar);
-        if (!request.empty()) {
-            request.pop_back();
-        }
-
-        return std::make_unique<Request>(request);
-    }
-
-    void Listener::sendResponse(std::unique_ptr<Response> response) {
-        for(auto & chunk: response->getParsed()) {
-            serverSocket.safeSendData(chunk);
+            serverSocket.safeReceiveData(request);
+            message += request;
+        } while (!request.empty() && request.back() != protocol::terminateChar);
+        if (!message.empty()) {
+            message.pop_back();
         }
     }
 
-    bool Listener::isClientConnected() {
+    void Listener::sendResponse(std::string& response)
+    {
+        serverSocket.safeSendData(response);
+    }
+
+    bool Listener::isClientConnected()
+    {
         return serverSocket.isConnected();
     }
 

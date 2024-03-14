@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<Invoice>
+    <Products>
+        <Product>
+            <itemName>PCs</itemName>
+            <price>500</price>
+            <quantity>3</quantity>
+        </Product>
+        <Product>
+            <itemName>Laptop lenovo IdeaPad 15.6</itemName>
+            <price>400</price>
+            <quantity>1</quantity>
+        </Product>
+        <Product>
+            <itemName>MacBook Pro 16</itemName>
+            <price>2500</price>
+            <quantity>1</quantity>
+        </Product>
+    </Products>
+</Invoice>

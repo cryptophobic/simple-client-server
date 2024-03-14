@@ -1,17 +1,14 @@
-//
-// Created by Dmytro Uglach on 13.11.2023.
-//
-
 #include "Quit.hpp"
+#include "protocol/Request.hpp"
+#include "protocol/ApiAccess.hpp"
 
 namespace InvoiceMasterClient {
 
     std::unique_ptr<CommandStruct> Quit::run()
     {
-        std::unique_ptr<CommandStruct> command = std::make_unique<CommandStruct>();
-        command->request = std::make_unique<Request>(settings::services.quit, std::vector<std::string>{});
+        auto command = std::make_unique<CommandStruct>();
+        command->request = protocol::Request::build({protocol::requestDisconnect, {}});
 
-        return std::move(command);
+        return command;
     }
-
 } // InvoiceMasterClient

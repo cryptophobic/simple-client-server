@@ -1,21 +1,26 @@
 #pragma once
 
-#include "../settings/ServiceList.hpp"
-#include "ServiceConnector/Request.hpp"
+#include "protocol/ApiAccess.hpp"
+#include "BaseApplication.hpp"
 #include <memory>
+#include <vector>
+#include <string>
 
 namespace InvoiceMasterClient {
 
     struct CommandStruct {
     public:
-        std::unique_ptr<settings::ServiceSignature> internalCommand = std::make_unique<settings::ServiceSignature>(settings::services.mainMenu);
-        std::unique_ptr<Request> request = nullptr;
+        char internalCommand = protocol::requestMainMenu;;
+        std::string request;
     };
 
     class View {
     public:
+        explicit View(std::shared_ptr<BaseApplication> newContext) : context(newContext) {};
         virtual ~View() = default;
         virtual std::unique_ptr<CommandStruct> run() = 0;
+    protected:
+        std::shared_ptr<BaseApplication> context;
     };
 
 } // InvoiceMasterClient

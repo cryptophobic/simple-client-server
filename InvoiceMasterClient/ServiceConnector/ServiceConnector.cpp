@@ -1,6 +1,7 @@
-#include "ServiceConnector.hpp"
 #include <sstream>
 #include <string>
+#include "ServiceConnector.hpp"
+#include "protocol/Agreements.hpp"
 
 namespace InvoiceMasterClient {
 
@@ -11,25 +12,19 @@ namespace InvoiceMasterClient {
         }
     }
 
-    std::unique_ptr<Response> ServiceConnector::sendCommand(std::unique_ptr<Request> request)
+    std::unique_ptr<protocol::ResponseStructure> ServiceConnector::sendCommand(const std::string& request)
     {
-        std::string message, response;
-        for(auto & chunk: request->getParsed()) {
-            if (!clientSocket.safeSendData(chunk)) {
-                throw std::runtime_error("sendCommand: cannot send command");
-            }
+        std::string response;
+        if (!clientSocket.safeSendData(request)) {
+            throw std::runtime_error("sendCommand: cannot send request");
         }
-        do {
-            if (!clientSocket.safeReceiveData(message)) {
-                throw std::runtime_error("sendCommand: cannot receive data");
-            }
-            //std::cout << message << std::endl;
-            response += message;
-        } while (!message.empty() && message.back() != settings::terminateChar);
+        if (!clientSocket.safeReceiveData(response)) {
+            throw std::runtime_error("sendCommand: cannot receive data");
+        }
         if (!response.empty()) {
             response.pop_back();
         }
-        return std::make_unique<Response>(response);
+        return protocol::Response::parse(response);
     }
 
     void ServiceConnector::closeConnection()
@@ -37,7 +32,8 @@ namespace InvoiceMasterClient {
         clientSocket.closeConnections();
     }
 
-    bool ServiceConnector::isConnected() {
+    bool ServiceConnector::isConnected()
+    {
         return clientSocket.isConnected();
     }
 } // InvoiceMasterClient

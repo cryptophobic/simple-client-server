@@ -1,49 +1,45 @@
 #include "Application.hpp"
+#include "protocol/ApiAccess.hpp"
 #include <memory>
+#include <vector>
 
 namespace InvoiceMasterServer {
 
-    void Application::run() {
+    void Application::run()
+    {
         while (!quit) {
-            try {
-                service.listen();
+            waitForConnection();
+            std::string requestMessage;
+            if (controller == nullptr) {
+                controller = std::make_unique<Controller>(shared_from_this());
             }
-            catch (std::runtime_error& e) {
-                std::cerr << e.what() << std::endl;
-                quit = true;
+            disconnected = false;
+            invoiceService.init();
+            while(readFromClient(requestMessage)) {
+                std::string response = controller->execute(requestMessage);
+                service.sendResponse(response);
             }
-
-            while (service.isClientConnected()) {
-                std::unique_ptr<Request> request = service.receiveCommand();
-                std::unique_ptr<Response> response = controller(std::move(request));
-                service.sendResponse(std::move(response));
-            }
+            loginService.logout();
         }
     }
 
-    //TODO: going to move to controller component
-    std::unique_ptr<Response> Application::controller(std::unique_ptr<Request> request)
+    void Application::waitForConnection()
     {
-        switch (request->parsed->command) {
-            case settings::services.login.code:
-                loginService.authorize(request->parsed->arguments[0], request->parsed->arguments[1]);
-                if (loginService.isAuthorized()) {
-                    return std::make_unique<Response>(settings::responseSuccess, settings::authorized, "");
-                }
-                break;
-            case settings::services.admin.code:
-                if (loginService.isAuthorized()) {
-                    quit = true;
-                    return std::make_unique<Response>(settings::responseSuccess, settings::disconnected, "");
-                }
-            case settings::services.quit.code:
-                return std::make_unique<Response>(settings::responseSuccess, settings::disconnected, "");
-            default:
-                break;
+        try {
+            service.listen();
         }
-        return std::make_unique<Response>(
-                settings::responseError,
-                loginService.isAuthorized() ? settings::authorized : settings::notAuthorized,
-                "");
+        catch (std::runtime_error& e) {
+            std::cerr << e.what() << std::endl;
+            quit = true;
+        }
+    }
+
+    bool Application::readFromClient(std::string &s)
+    {
+        if (!service.isClientConnected()) {
+            return false;
+        }
+        service.read(s);
+        return true;
     }
 }

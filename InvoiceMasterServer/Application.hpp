@@ -1,18 +1,19 @@
 #pragma once
 
 #include "Service/Listener.hpp"
-#include "models/AuthenticationManager.hpp"
+#include "Controller.hpp"
+#include <vector>
+#include <string>
 
 namespace InvoiceMasterServer {
-    class Application {
+    class Application : public BaseApplication, public std::enable_shared_from_this<Application> {
     public:
-        void run();
-    private:
-        //Preloaded services
-        AuthenticationManager loginService;
+        virtual void run();
 
-        bool quit = false;
+    protected:
+        std::unique_ptr<Controller> controller;
+        void waitForConnection();
+        bool readFromClient(std::string& );
         Listener service;
-        std::unique_ptr<Response> controller(std::unique_ptr<Request> request);
     };
 }

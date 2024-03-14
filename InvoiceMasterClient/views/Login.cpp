@@ -1,24 +1,32 @@
 #include "Login.hpp"
-
-#include <iostream>
-#include "../../settings/ServiceList.hpp"
+#include "config/settings.hpp"
+#include "protocol/Request.hpp"
 
 namespace InvoiceMasterClient {
 
+    std::string Login::buildRequest(const char requestCommand, const std::vector<std::string>& arguments)
+    {
+        return protocol::Request::build({requestCommand, arguments});
+    }
+
     std::unique_ptr<CommandStruct> Login::run()
     {
-        std::vector<std::string> arguments{settings::services.login.argumentsNumber, ""};
+        std::vector<std::string> arguments{};
+        std::string login;
+        std::string pass;
 
-        std::cout << "Please enter your login and password separated by space" << std::endl;
-        std::cout << ":> ";
+        context->userOutputSystem->outputLine("Please enter your login");
+        context->userOutputSystem->output(":> ");
+        context->userInputSystem->read(login);
+        arguments.emplace_back(login);
+        context->userOutputSystem->outputLine("Please enter your password");
+        context->userOutputSystem->output(":> ");
+        context->userInputSystem->read(pass);
+        arguments.emplace_back(pass);
 
-        for (auto & argument: arguments) {
-            std::cin >> argument;
-        }
+        auto command = std::make_unique<CommandStruct>();
+        command->request = buildRequest(protocol::requestLogin, arguments);
 
-        std::unique_ptr<CommandStruct> command = std::make_unique<CommandStruct>();
-        command->request = std::make_unique<Request>(settings::services.login, arguments);
-
-        return std::move(command);
+        return command;
     }
 } // InvoiceMasterClient
